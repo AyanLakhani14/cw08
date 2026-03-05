@@ -28,8 +28,10 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.existing?.cardName ?? '');
-    _imageController = TextEditingController(text: widget.existing?.imageUrl ?? '');
+    _nameController =
+        TextEditingController(text: widget.existing?.cardName ?? '');
+    _imageController =
+        TextEditingController(text: widget.existing?.imageUrl ?? '');
     _selectedSuit = widget.existing?.suit ?? widget.folder.folderName;
   }
 
@@ -43,12 +45,22 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // Safety: folder id should exist if it came from DB
+    if (widget.folder.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error: Folder id is missing')),
+      );
+      return;
+    }
+
     final card = PlayingCard(
       id: widget.existing?.id,
       cardName: _nameController.text.trim(),
       suit: _selectedSuit,
-      imageUrl: _imageController.text.trim().isEmpty ? null : _imageController.text.trim(),
-      folderId: widget.folder.id, // stays in this folder
+      imageUrl: _imageController.text.trim().isEmpty
+          ? null
+          : _imageController.text.trim(),
+      folderId: widget.folder.id!, // ✅ FIXED: non-null int
     );
 
     try {
@@ -99,14 +111,15 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
                   border: OutlineInputBorder(),
                 ),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty) return 'Card name required';
+                  if (v == null || v.trim().isEmpty) {
+                    return 'Card name required';
+                  }
                   return null;
                 },
               ),
               const SizedBox(height: 12),
-
               DropdownButtonFormField<String>(
-                value: _selectedSuit,
+                initialValue: _selectedSuit,
                 decoration: const InputDecoration(
                   labelText: 'Suit',
                   border: OutlineInputBorder(),
@@ -119,7 +132,6 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
                 },
               ),
               const SizedBox(height: 12),
-
               TextFormField(
                 controller: _imageController,
                 decoration: const InputDecoration(
@@ -129,7 +141,6 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-
               Row(
                 children: [
                   Expanded(
@@ -148,7 +159,6 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
                 ],
               ),
               const SizedBox(height: 8),
-
               Text(
                 'Folder: ${widget.folder.folderName}',
                 textAlign: TextAlign.center,

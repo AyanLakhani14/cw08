@@ -31,7 +31,8 @@ class _FoldersScreenState extends State<FoldersScreen> {
 
     for (final folder in folders) {
       if (folder.id != null) {
-        counts[folder.id!] = await _cardRepository.getCardCountByFolder(folder.id!);
+        counts[folder.id!] =
+            await _cardRepository.getCardCountByFolder(folder.id!);
       }
     }
 
@@ -57,6 +58,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
     if (confirmed) {
       await _folderRepository.deleteFolder(folderId);
       await _loadFolders();
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Folder "${folder.folderName}" deleted')),
@@ -78,7 +80,7 @@ class _FoldersScreenState extends State<FoldersScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
-          childAspectRatio: 1.2,
+          childAspectRatio: 1.05,
         ),
         itemCount: _folders.length,
         itemBuilder: (context, index) {
@@ -98,32 +100,46 @@ class _FoldersScreenState extends State<FoldersScreen> {
                     builder: (context) => CardsScreen(folder: folder),
                   ),
                 );
-                _loadFolders(); // refresh counts after returning
+                _loadFolders();
               },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+
+              // FIXED UI
+              child: Stack(
                 children: [
-                  Icon(
-                    _getSuitIcon(folder.folderName),
-                    size: 64,
-                    color: _getSuitColor(folder.folderName),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    folder.folderName,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _getSuitSymbol(folder.folderName),
+                          style: TextStyle(
+                            fontSize: 60,
+                            color: _getSuitColor(folder.folderName),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          folder.folderName,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '$cardCount cards',
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    '$cardCount cards',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 8),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteFolder(folder),
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _deleteFolder(folder),
+                    ),
                   ),
                 ],
               ),
@@ -134,18 +150,19 @@ class _FoldersScreenState extends State<FoldersScreen> {
     );
   }
 
-  IconData _getSuitIcon(String suitName) {
+  // ✅ REAL SUIT SYMBOLS
+  String _getSuitSymbol(String suitName) {
     switch (suitName) {
       case 'Hearts':
-        return Icons.favorite;
+        return '♥';
       case 'Diamonds':
-        return Icons.change_history;
+        return '♦';
       case 'Clubs':
-        return Icons.filter_vintage;
+        return '♣';
       case 'Spades':
-        return Icons.eco;
+        return '♠';
       default:
-        return Icons.help;
+        return '?';
     }
   }
 
