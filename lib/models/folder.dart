@@ -1,3 +1,4 @@
+
 class Folder {
   final int? id;
   final String folderName;
@@ -10,7 +11,7 @@ class Folder {
   });
 
   // Convert Folder object to Map for database operations
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'folder_name': folderName,
@@ -19,7 +20,7 @@ class Folder {
   }
 
   // Create Folder object from Map (database query result)
-  factory Folder.fromMap(Map map) {
+  factory Folder.fromMap(Map<String, dynamic> map) {
     return Folder(
       id: map['id'],
       folderName: map['folder_name'],
@@ -43,64 +44,5 @@ class Folder {
   @override
   String toString() {
     return 'Folder{id: $id, folderName: $folderName, timestamp: $timestamp}';
-  }
-}
-models/card.dart
-Hide Code
-
-class PlayingCard {
-  final int? id;
-  final String cardName;
-  final String suit;
-  final String? imageUrl;
-  final int folderId;
-
-  PlayingCard({
-    this.id,
-    required this.cardName,
-    required this.suit,
-    this.imageUrl,
-    required this.folderId,
-  });
-
-  Map toMap() {
-    return {
-      'id': id,
-      'card_name': cardName,
-      'suit': suit,
-      'image_url': imageUrl,
-      'folder_id': folderId,
-    };
-  }
-
-  factory PlayingCard.fromMap(Map map) {
-    return PlayingCard(
-      id: map['id'],
-      cardName: map['card_name'],
-      suit: map['suit'],
-      imageUrl: map['image_url'],
-      folderId: map['folder_id'],
-    );
-  }
-
-  PlayingCard copyWith({
-    int? id,
-    String? cardName,
-    String? suit,
-    String? imageUrl,
-    int? folderId,
-  }) {
-    return PlayingCard(
-      id: id ?? this.id,
-      cardName: cardName ?? this.cardName,
-      suit: suit ?? this.suit,
-      imageUrl: imageUrl ?? this.imageUrl,
-      folderId: folderId ?? this.folderId,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'PlayingCard{id: $id, cardName: $cardName, suit: $suit, folderId: $folderId}';
   }
 }
