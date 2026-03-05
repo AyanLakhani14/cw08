@@ -15,6 +15,52 @@ class CardsScreen extends StatefulWidget {
 }
 
 class _CardsScreenState extends State<CardsScreen> {
+  Widget buildCardImage(PlayingCard card) {
+  final image = card.imageUrl;
+
+  // 1. Network image
+  if (image != null && image.startsWith('http')) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.network(
+        image,
+        width: 56,
+        height: 56,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _fallbackImage(),
+      ),
+    );
+  }
+
+  // 2. Local file path (image_picker)
+  if (image != null && File(image).existsSync()) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.file(
+        File(image),
+        width: 56,
+        height: 56,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  // 3. Fallback
+  return _fallbackImage();
+}
+
+Widget _fallbackImage() {
+  return Container(
+    width: 56,
+    height: 56,
+    decoration: BoxDecoration(
+      color: Colors.grey[300],
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Icon(Icons.image_not_supported, color: Colors.grey[700]),
+  );
+}
+
   final CardRepository _cardRepository = CardRepository();
   List<PlayingCard> _cards = [];
 
