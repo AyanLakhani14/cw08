@@ -16,12 +16,8 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -49,7 +45,7 @@ class DatabaseHelper {
 
     // Prepopulate folders
     await _prepopulateFolders(db);
-    
+
     // Prepopulate cards
     await _prepopulateCards(db);
   }
@@ -66,15 +62,29 @@ class DatabaseHelper {
 
   Future _prepopulateCards(Database db) async {
     final suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
-    final cards = ['Ace', '2', '3', '4', '5', '6', '7', 
-                   '8', '9', '10', 'Jack', 'Queen', 'King'];
-    
+    final cards = [
+      'Ace',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      'Jack',
+      'Queen',
+      'King',
+    ];
+
     for (int folderId = 1; folderId <= suits.length; folderId++) {
       for (var card in cards) {
         await db.insert('cards', {
           'card_name': card,
           'suit': suits[folderId - 1],
-          'image_url': 'assets/cards/${suits[folderId - 1].toLowerCase()}_$card.png',
+          'image_url':
+              'assets/cards/${suits[folderId - 1].toLowerCase()}_$card.png',
           'folder_id': folderId,
         });
       }

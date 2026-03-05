@@ -15,7 +15,7 @@ class FolderRepository {
   Future<List<Folder>> getAllFolders() async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query('folders');
-    
+
     return List.generate(maps.length, (i) {
       return Folder.fromMap(maps[i]);
     });
@@ -29,7 +29,7 @@ class FolderRepository {
       where: 'id = ?',
       whereArgs: [id],
     );
-    
+
     if (maps.isEmpty) return null;
     return Folder.fromMap(maps.first);
   }
@@ -49,11 +49,7 @@ class FolderRepository {
   Future deleteFolder(int id) async {
     final db = await _dbHelper.database;
     // Due to ON DELETE CASCADE, this will also delete all cards
-    return await db.delete(
-      'folders',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('folders', where: 'id = ?', whereArgs: [id]);
   }
 
   // Get folder count

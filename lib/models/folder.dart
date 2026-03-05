@@ -1,22 +1,13 @@
-
 class Folder {
   final int? id;
   final String folderName;
   final String timestamp;
 
-  Folder({
-    this.id,
-    required this.folderName,
-    required this.timestamp,
-  });
+  Folder({this.id, required this.folderName, required this.timestamp});
 
   // Convert Folder object to Map for database operations
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'folder_name': folderName,
-      'timestamp': timestamp,
-    };
+    return {'id': id, 'folder_name': folderName, 'timestamp': timestamp};
   }
 
   // Create Folder object from Map (database query result)
@@ -29,11 +20,7 @@ class Folder {
   }
 
   // Create a copy with modified fields
-  Folder copyWith({
-    int? id,
-    String? folderName,
-    String? timestamp,
-  }) {
+  Folder copyWith({int? id, String? folderName, String? timestamp}) {
     return Folder(
       id: id ?? this.id,
       folderName: folderName ?? this.folderName,

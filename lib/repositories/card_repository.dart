@@ -16,7 +16,7 @@ class CardRepository {
   Future<List<PlayingCard>> getAllCards() async {
     final db = await _dbHelper.database;
     final List<Map<String, Object?>> maps = await db.query('cards');
-    
+
     return List.generate(maps.length, (i) {
       return PlayingCard.fromMap(maps[i]);
     });
@@ -31,7 +31,7 @@ class CardRepository {
       whereArgs: [folderId],
       orderBy: 'card_name ASC',
     );
-    
+
     return List.generate(maps.length, (i) {
       return PlayingCard.fromMap(maps[i]);
     });
@@ -45,7 +45,7 @@ class CardRepository {
       where: 'id = ?',
       whereArgs: [id],
     );
-    
+
     if (maps.isEmpty) return null;
     return PlayingCard.fromMap(maps.first);
   }
@@ -64,11 +64,7 @@ class CardRepository {
   // DELETE - Delete a card
   Future<int> deleteCard(int id) async {
     final db = await _dbHelper.database;
-    return await db.delete(
-      'cards',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('cards', where: 'id = ?', whereArgs: [id]);
   }
 
   // Get card count for a specific folder
