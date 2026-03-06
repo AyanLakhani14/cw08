@@ -24,7 +24,7 @@ class _CardsScreenState extends State<CardsScreen> {
   }
 
   Future<void> _loadCards() async {
-    final cards = await _cardRepository.getCardsByFolder(widget.folder.id!);
+    final cards = await _cardRepository.getCardsByFolderId(widget.folder.id!);
     if (!mounted) return;
     setState(() => _cards = cards);
   }
